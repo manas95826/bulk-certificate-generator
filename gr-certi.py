@@ -10,6 +10,12 @@ def main():
 
     # Input for name
     name = st.text_input("Enter your name:")
+    
+    # Dropdown for certificate type
+    certificate_type = st.selectbox(
+        "Select Certificate Type",
+        ["Vibathon", "Code Cubicle 4"]
+    )
 
     # Single button for certificate generation
     if st.button("Generate Certificate", key="generate_btn"):
@@ -18,11 +24,19 @@ def main():
             return
             
         try:
-            # Configuration
-            template_path = "online.png"
-            font_path = "Montserrat-Bold.ttf"
-            font_size = 100
-            y = 1050  # Updated to match certificate_generator_simple.py
+            # Configuration based on certificate type
+            if certificate_type == "Vibathon":
+                template_path = "online.png"
+                font_path = "Montserrat-Bold.ttf"
+                font_size = 100
+                y = 1050
+                text_color = (255, 255, 255)  # White text
+            else:  # Code Cubicle 4
+                template_path = "online-1.png"
+                font_path = "Montserrat-Bold.ttf"
+                font_size = 100
+                y = 1350  # Different y-value for Code Cubicle 4
+                text_color = (0, 0, 0)  # Black text
             
             # Create a BytesIO object to store the certificate
             img_buffer = io.BytesIO()
@@ -34,7 +48,7 @@ def main():
                 output_path=img_buffer,  # Pass BytesIO instead of file path
                 font_path=font_path,
                 font_size=font_size,
-                text_color=(255, 255, 255),  # Changed to white
+                text_color=text_color,
                 y=y
             )
             
@@ -45,7 +59,7 @@ def main():
             st.download_button(
                 label="Download Certificate",
                 data=img_buffer,
-                file_name=f"{name.replace(' ', '_')}_certificate.png",
+                file_name=f"{name.replace(' ', '_')}_{certificate_type.lower().replace(' ', '_')}_certificate.png",
                 mime="image/png",
                 key="download_btn"
             )
